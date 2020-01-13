@@ -1,6 +1,4 @@
-﻿#define debuger
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -18,41 +16,43 @@ namespace Core
             "GetMessage",
             "Init"
         };
-      
-        public bool Validate()
+
+        private object[] GetPluginsArray()
         {
-#if (!debuger)
-                    Console.SetOut(TextWriter.Null);
-                    Console.SetError(TextWriter.Null);
-#endif
-
-            bool validated = true;
-
-            object[] plugins = new object[] 
+            object[] plugins = new object[]
             {
                 new PolfanConnector.Plugin()
             };
+
+            return plugins;
+        }
+      
+        public bool Validate()
+        {
+            bool validated = true;
+            object[] plugins = GetPluginsArray();
  
             foreach (object plugin in plugins)
             {
                 Type type = plugin.GetType();
 
                 // Get the public methods
-                MethodInfo[] arrayMethodsInfo = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                MethodInfo[] arrayMethodsInfo = type.GetMethods(
+                    BindingFlags.Public 
+                    | BindingFlags.Instance 
+                    | BindingFlags.DeclaredOnly
+                );
 
                 if (!ValidateMethodsQty(arrayMethodsInfo))
                 {
                     Console.WriteLine("Methods quantity does not match in {0}", plugin.ToString());
-
                     validated = false;
                     break;
                 }
 
-                // Display information for all methods
                 if (!ValidateMethodsName(arrayMethodsInfo))
                 {
                     Console.WriteLine("Methods does not match in {0}", plugin.ToString());
-
                     validated = false;
                     break;
                 }

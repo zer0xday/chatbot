@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Websocket.Client;
 
-namespace PolfanIOPlugin
+
+namespace PolfanConnector
 {
     public class Connection
     {
@@ -23,7 +24,8 @@ namespace PolfanIOPlugin
             try
             {
                 return receivedMessages.Dequeue();
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 return null;
             }

@@ -1,5 +1,5 @@
 ﻿using System;
-using PolfanIOPlugin;
+using PolfanConnector;
 using System.Threading.Tasks;
 
 namespace PolfanIOPluginTests

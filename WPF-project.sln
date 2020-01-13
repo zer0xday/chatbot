@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolfanConnector", "PolfanConnector\PolfanConnector.csproj", "{06CEF418-DD6D-4F17-AD52-528059F971C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{81189620-D678-4E2D-9E17-AA0015C6157C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{06CEF418-DD6D-4F17-AD52-528059F971C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06CEF418-DD6D-4F17-AD52-528059F971C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06CEF418-DD6D-4F17-AD52-528059F971C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81189620-D678-4E2D-9E17-AA0015C6157C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81189620-D678-4E2D-9E17-AA0015C6157C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81189620-D678-4E2D-9E17-AA0015C6157C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81189620-D678-4E2D-9E17-AA0015C6157C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

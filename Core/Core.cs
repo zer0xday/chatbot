@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PolfanConnector;
 
 namespace Core
 {
@@ -7,9 +8,10 @@ namespace Core
     {
         static void Main()
         {
-            PuginValidator pv = new PuginValidator();
+            PluginValidator pluginValidator = new PluginValidator();
 
-            pv.Validate();
+            // Validate referenced plugins
+            pluginValidator.Validate();
         }
     }
 }

@@ -29,12 +29,12 @@ namespace Core
       
         public bool Validate()
         {
-            bool validated = true;
             object[] plugins = GetPluginsArray();
  
             foreach (object plugin in plugins)
             {
                 Type type = plugin.GetType();
+                string pluginName = plugin.ToString();
 
                 // Get the public methods
                 MethodInfo[] arrayMethodsInfo = type.GetMethods(
@@ -43,48 +43,41 @@ namespace Core
                     | BindingFlags.DeclaredOnly
                 );
 
-                if (!ValidateMethodsQty(arrayMethodsInfo))
+                try
                 {
-                    Console.WriteLine("Methods quantity does not match in {0}", plugin.ToString());
-                    validated = false;
-                    break;
-                }
-
-                if (!ValidateMethodsName(arrayMethodsInfo))
+                    ValidateMethodsName(arrayMethodsInfo, pluginName);
+                    ValidateMethodsQty(arrayMethodsInfo, pluginName);
+                } catch(Exception e)
                 {
-                    Console.WriteLine("Methods does not match in {0}", plugin.ToString());
-                    validated = false;
-                    break;
+                    Console.WriteLine(e.Message);
+                    return false;
                 }
-            }
-
-            return validated;
-        }
-
-        private bool ValidateMethodsQty(MethodInfo[] methodsInfoArray)
-        {
-            if (methodsInfoArray.Length < requiredMethods.Length)
-            {
-                return false;
             }
 
             return true;
         }
 
-        private bool ValidateMethodsName(MethodInfo[] methodsInfoArray)
+        private bool ValidateMethodsQty(MethodInfo[] methodsInfoArray, string pluginName)
         {
-            bool passed = true;
+            if (methodsInfoArray.Length < requiredMethods.Length)
+            {
+                throw new Exception($"Methods quantity does not match in {pluginName}");
+            }
 
+            return true;
+        }
+
+        private bool ValidateMethodsName(MethodInfo[] methodsInfoArray, string pluginName)
+        {
             foreach (MethodInfo methodInfo in methodsInfoArray)
             {
                 if (!requiredMethods.Contains(methodInfo.Name))
                 {
-                    passed = false;
-                    break;
+                    throw new Exception($"Methods does not match in {pluginName}");
                 }
             }
 
-            return passed;
+            return true;
         }
     }
 }

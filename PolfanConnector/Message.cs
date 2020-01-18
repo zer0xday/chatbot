@@ -7,6 +7,17 @@ namespace PolfanConnector
 {
     public class Message
     {
+        public int[] Ints 
+        { 
+            set { } 
+            get { return this.ints.ToArray(); } 
+        }
+        public string[] Strings 
+        { 
+            set { } 
+            get { return this.strings.ToArray(); } 
+        }
+
         private List<string> strings = new List<string>();
         private List<int> ints = new List<int>();
 
@@ -30,19 +41,30 @@ namespace PolfanConnector
             return this;
         }
 
-        public string[] GetStrings()
+        public int? GetInt(int index)
         {
-            return strings.ToArray();
+            try
+            {
+                return this.Ints[index];
+            } catch (IndexOutOfRangeException) { }
+
+            return null;
         }
 
-        public int[] GetInts()
+        public string GetString(int index)
         {
-            return ints.ToArray();
+            try
+            {
+                return this.Strings[index];
+            }
+            catch (IndexOutOfRangeException) { }
+
+            return null;
         }
 
         public object GetFrame()
         {
-            return new { strings = GetStrings(), numbers = GetInts() };
+            return new { strings = Strings, numbers = Ints };
         }
 
         public string GetJson()
@@ -52,32 +74,22 @@ namespace PolfanConnector
 
         public Message SetJson(string json)
         {
-            var parsed = JsonConvert.DeserializeObject(json);
-            var stringsProperty = parsed.GetType().GetProperty("strings");
-            var numbersProperty = parsed.GetType().GetProperty("numbers");
-            Console.WriteLine(parsed);
-            //if (stringsProperty != null && stringsProperty.GetType().Name == "array")
-            //{
-            //    foreach (var text in stringsProperty.GetValue())
-            //    {
-            //        AddString(text);
-            //    }
-            //}
-
-            //if (numbersProperty != null && stringsProperty.Name == "array")
-            //{
-            //    foreach (var number in parsed.numbers)
-            //    {
-            //        AddString(number);
-            //    }
-            //}
-
+            var parsed = JsonConvert.DeserializeObject<Frame>(json);
+            this.strings = parsed.strings;
+            this.ints = parsed.numbers;
+          
             return this;
         }
 
         public override string ToString()
         {
             return GetJson();
+        }
+
+        private class Frame
+        {
+            public List<string> strings = new List<string>();
+            public List<int> numbers = new List<int>();
         }
     }
 }

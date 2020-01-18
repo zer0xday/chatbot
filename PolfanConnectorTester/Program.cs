@@ -20,6 +20,8 @@ namespace PolfanConnectorTester
                     continue;
                 }
 
+
+
                 Console.WriteLine("WIADOMOSC:" + message);
 
             }

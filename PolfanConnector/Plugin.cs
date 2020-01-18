@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Text;
 
@@ -45,7 +46,12 @@ namespace PolfanConnector
             {
                 if (message.GetInt(0) == 610)
                 {
-                    return new Tuple<string, string>(message.GetString(0), message.GetString(1));
+                    var touple = convertMessageIntoTuple(message);
+
+                    if (touple.Item1.Length > 0 && touple.Item2.Length > 0)
+                    {
+                        return touple;
+                    }
                 }
             } 
             catch (IndexOutOfRangeException)
@@ -63,6 +69,14 @@ namespace PolfanConnector
             };
 
             this.connection.Connect(connectionSettings);
+        }
+
+        private Tuple<string, string> convertMessageIntoTuple(Message message)
+        {
+            var regex = new Regex(@"<font color=.{7}><b>(.*)</b></font>: (.*)");
+            Match match = regex.Match(message.GetString(0));
+
+            return new Tuple<string, string>(match.Groups[1].Value, match.Groups[2].Value);
         }
     }
 }

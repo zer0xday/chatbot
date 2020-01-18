@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PolfanConnector
 {
@@ -9,18 +7,15 @@ namespace PolfanConnector
     {
         private const string CHAT_SERVER_URL = "ws://s1.polfan.pl:14080";
         private const string CHAT_ROOM_NAME = "gabinet";
+        private const string CHAT_MESSAGE_PATTERN = "<font color=.{7}><b>(.*)</b></font>: (.*)"; // <font color=#ff0000><b>NICK</b></font>: MESSAGE
+
+        public bool IsReady
+        {
+            set { }
+            get { return connection.IsLoggedIn; }
+        }
 
         private Connection connection = new Connection();
-
-        public Plugin()
-        {
-
-        }
-
-        public bool IsConnected()
-        {
-            return true;
-        }
 
         public void SendMessage(string messageContent)
         {
@@ -42,20 +37,10 @@ namespace PolfanConnector
                 return null;
             }
 
-            try
+            if (message.GetInt(0) == 610) // ordinary chat message
             {
-                if (message.GetInt(0) == 610)
-                {
-                    var touple = convertMessageIntoTuple(message);
-
-                    if (touple.Item1.Length > 0 && touple.Item2.Length > 0)
-                    {
-                        return touple;
-                    }
-                }
-            } 
-            catch (IndexOutOfRangeException)
-            {}
+                return convertMessageIntoTuple(message);
+            }
 
             return null;
         }
@@ -73,10 +58,13 @@ namespace PolfanConnector
 
         private Tuple<string, string> convertMessageIntoTuple(Message message)
         {
-            var regex = new Regex(@"<font color=.{7}><b>(.*)</b></font>: (.*)");
+            var regex = new Regex(CHAT_MESSAGE_PATTERN);
             Match match = regex.Match(message.GetString(0));
+            var tuple = new Tuple<string, string>(match.Groups[1].Value, match.Groups[2].Value);
 
-            return new Tuple<string, string>(match.Groups[1].Value, match.Groups[2].Value);
+            // some messages can be a system warnings - they have no nickname
+            // we are not interested in them
+            return tuple.Item1.Length > 0 && tuple.Item2.Length > 0 ? tuple : null;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Core
 {
     public class PluginValidator
     {
-        private string[] requiredMethods = new string[4]
+        private readonly string[] requiredMethods = new string[4]
         {
             "IsConnected",
             "SendMessage",
@@ -14,44 +14,27 @@ namespace Core
             "Init"
         };
 
-        private object[] GetPluginsArray()
+        public string Validate(object plugin)
         {
-            object[] plugins = new object[]
+            Type type = plugin.GetType();
+            string pluginName = plugin.ToString();
+
+            // Get the public methods
+            MethodInfo[] arrayMethodsInfo = type.GetMethods(
+                BindingFlags.Public 
+                | BindingFlags.Instance 
+                | BindingFlags.DeclaredOnly
+            );
+
+            try
             {
-                new PolfanConnector.Plugin()
-            };
-
-            return plugins;
-        }
-      
-        public bool Validate()
-        {
-            object[] plugins = GetPluginsArray();
- 
-            foreach (object plugin in plugins)
+                ValidateMethodsName(arrayMethodsInfo, pluginName);
+                ValidateMethodsQty(arrayMethodsInfo, pluginName);
+            } catch(Exception e)
             {
-                Type type = plugin.GetType();
-                string pluginName = plugin.ToString();
-
-                // Get the public methods
-                MethodInfo[] arrayMethodsInfo = type.GetMethods(
-                    BindingFlags.Public 
-                    | BindingFlags.Instance 
-                    | BindingFlags.DeclaredOnly
-                );
-
-                try
-                {
-                    ValidateMethodsName(arrayMethodsInfo, pluginName);
-                    ValidateMethodsQty(arrayMethodsInfo, pluginName);
-                } catch(Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    return false;
-                }
+                return e.Message;
             }
-
-            return true;
+            return "Plugin validated";
         }
 
         private bool ValidateMethodsQty(MethodInfo[] methodsInfoArray, string pluginName)
@@ -60,7 +43,6 @@ namespace Core
             {
                 throw new Exception($"Methods quantity does not match in {pluginName}");
             }
-
             return true;
         }
 
@@ -73,7 +55,6 @@ namespace Core
                     throw new Exception($"Methods does not match in {pluginName}");
                 }
             }
-
             return true;
         }
     }

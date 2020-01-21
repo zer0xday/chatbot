@@ -42,7 +42,7 @@ namespace GuiClient
             var core = new Core.Core();
             var dialog = new NameDialog();
             dialog.ShowDialog();
-            //var result = core.Init(config[0]);
+            var result = core.Init(config[1]);
 
             rtb.AppendText($"Nick bota: {dialog.BotName}");
 

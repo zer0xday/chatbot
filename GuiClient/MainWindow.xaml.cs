@@ -23,6 +23,9 @@ namespace GuiClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string CONNECTED = "Connected";
+        private const string DISCONNECTED = "Disconnected";
+
         private string[] config
         {
             get { return ConfigurationManager.AppSettings.AllKeys; }
@@ -34,12 +37,14 @@ namespace GuiClient
             InitializeComponent();
         }
 
-        private void ConnectButton(object sender, RoutedEventArgs e)
+        private void ConnectButton_Handler(object sender, RoutedEventArgs e)
         {
             var core = new Core.Core();
-            var result = core.Init(config[0]);
+            var dialog = new NameDialog();
+            dialog.ShowDialog();
+            //var result = core.Init(config[0]);
 
-            rtb.AppendText(result);
+            rtb.AppendText($"Nick bota: {dialog.BotName}");
 
             // TODO: button actual status
             ChangeConnectionStatus();
@@ -47,15 +52,14 @@ namespace GuiClient
 
         private void ChangeConnectionStatus()
         {
-            const string CONNECTED = "Connected";
-            const string DISCONNECTED = "Disconnected";
-
             if (connectionStatus.Text == CONNECTED)
             {
                 connectionStatus.Text = DISCONNECTED;
+                connectionStatus.Foreground = new SolidColorBrush(Colors.Red);
             } else
             {
                 connectionStatus.Text = CONNECTED;
+                connectionStatus.Foreground = new SolidColorBrush(Colors.Green);
             }
         }
     }

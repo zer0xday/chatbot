@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;
-using Core;
+using ChatBot;
 using System.IO;
 
 namespace GuiClient
@@ -32,17 +32,19 @@ namespace GuiClient
             set { }
         }
 
+        private Core core;
+
         public MainWindow()
         {
             InitializeComponent();
+            core = new Core();
         }
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
         {
-            var core = new Core.Core();
             var dialog = new NameDialog();
             dialog.ShowDialog();
-            var result = core.Init(config[1]);
+            var result = core.Init(config[0]);
 
             rtb.AppendText($"Nick bota: {dialog.BotName}");
 

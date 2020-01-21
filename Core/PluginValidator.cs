@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Linq;
 
-namespace Core
+namespace ChatBot
 {
     public class PluginValidator
     {

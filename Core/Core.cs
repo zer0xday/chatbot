@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core
+namespace ChatBot
 {
     public partial class Core
     {

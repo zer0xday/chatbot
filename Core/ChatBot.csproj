@@ -5,6 +5,8 @@
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject></StartupObject>
+    <AssemblyName>ChatBot</AssemblyName>
+    <RootNamespace>ChatBot</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

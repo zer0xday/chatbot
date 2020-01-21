@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace Core
+namespace ChatBot
 {
     partial class Core
     {

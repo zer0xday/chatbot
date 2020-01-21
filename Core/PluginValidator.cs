@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Linq;
 
 namespace ChatBot
 {
@@ -8,54 +7,55 @@ namespace ChatBot
     {
         private readonly string[] requiredMethods = new string[4]
         {
-            "IsConnected",
             "SendMessage",
             "GetMessage",
-            "Init"
+            "Init",
+            "End"
         };
 
-        public string Validate(object plugin)
+        private readonly string[] requiredProperties = new string[1]
+        {
+            "IsReady"
+        };
+
+        public void Validate(object plugin)
         {
             Type type = plugin.GetType();
             string pluginName = plugin.ToString();
 
-            // Get the public methods
-            MethodInfo[] arrayMethodsInfo = type.GetMethods(
-                BindingFlags.Public 
-                | BindingFlags.Instance 
-                | BindingFlags.DeclaredOnly
-            );
-
-            try
-            {
-                ValidateMethodsName(arrayMethodsInfo, pluginName);
-                ValidateMethodsQty(arrayMethodsInfo, pluginName);
-            } catch(Exception e)
-            {
-                return e.Message;
-            }
-            return "Plugin validated";
+            ValidateMethods(type, pluginName);
+            ValidateProperties(type, pluginName);
         }
 
-        private bool ValidateMethodsQty(MethodInfo[] methodsInfoArray, string pluginName)
+        private void ValidateMethods(Type type, string pluginName)
         {
-            if (methodsInfoArray.Length < requiredMethods.Length)
+            foreach (var methodName in requiredMethods)
             {
-                throw new Exception($"Methods quantity does not match in {pluginName}");
-            }
-            return true;
-        }
+                MethodInfo info = type.GetMethod(methodName);
 
-        private bool ValidateMethodsName(MethodInfo[] methodsInfoArray, string pluginName)
-        {
-            foreach (MethodInfo methodInfo in methodsInfoArray)
-            {
-                if (!requiredMethods.Contains(methodInfo.Name))
+                if (info == null || !info.IsPublic)
                 {
-                    throw new Exception($"Methods does not match in {pluginName}");
+                    throw new PluginMissingComponentException(pluginName, "method", methodName);
                 }
             }
-            return true;
         }
+
+        private void ValidateProperties(Type type, string pluginName)
+        {
+            foreach (var propertyName in requiredProperties)
+            {
+                PropertyInfo info = type.GetProperty(propertyName);
+
+                if (info == null)
+                {
+                    throw new PluginMissingComponentException(pluginName, "property", propertyName);
+                }
+            }
+        }
+    }
+
+    public class PluginMissingComponentException : MissingMethodException {
+        public PluginMissingComponentException(string pluginName, string cmpName, string componentName) 
+            : base($"Plugin {pluginName} does not contain required {cmpName}: {componentName}") { }
     }
 }

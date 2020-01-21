@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,19 +22,24 @@ namespace ConsolePlugin
         {
             if (GetConsoleWindow() == IntPtr.Zero)
             {
-                CreateConsole();
+                AllocConsole();
             }
 
-            Console.WriteLine($"Rozmowa z botem {botName}");
+            Console.WriteLine($"[=== Rozmowa z botem {botName} ===]");
             Console.WriteLine("Podaj swój pseudonim:");
+
             this.userName = Console.ReadLine();
             this.botName = botName;
             this.isReady = true;
+
+            Console.WriteLine( "[=== Rozmowa rozpoczęta. Przywitaj się. ===]");
+
+            getAsyncInput();
         }
 
         public void SendMessage(string text)
         {
-            Console.WriteLine($"{this.botName}: {text}");
+            writeMessage(this.botName, text);
         }
 
         public Tuple<string, string> GetMessage()
@@ -53,43 +57,33 @@ namespace ConsolePlugin
             return new Tuple<string, string>(this.userName, message);
         }
 
+        private void writeMessage(string nick, string message)
+        {
+            Console.WriteLine($"{nick}: {message}");
+        }
+
         async private void getAsyncInput()
         {
             await Task.Run(() =>
             {
-                this.messagesFromUser.Enqueue(Console.ReadLine());
+                var message = Console.ReadLine();
+
+                if (message.Length > 0)
+                {
+                    // overwrite last line in console
+                    Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                    writeMessage(this.userName, message);
+                    this.messagesFromUser.Enqueue(message);
+                }
             });
 
             getAsyncInput();
         }
 
-        private static void CreateConsole()
-        {
-            AllocConsole();
-
-            // stdout's handle seems to always be equal to 7
-            IntPtr defaultStdout = new IntPtr(7);
-            IntPtr currentStdout = GetStdHandle(StdOutputHandle);
-
-            if (currentStdout != defaultStdout)
-                // reset stdout
-                SetStdHandle(StdOutputHandle, defaultStdout);
-
-            // reopen stdout
-            TextWriter writer = new StreamWriter(Console.OpenStandardOutput())
-            { AutoFlush = true };
-            Console.SetOut(writer);
-        }
-
-        // P/Invoke required:
-        private const UInt32 StdOutputHandle = 0xFFFFFFF5;
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr GetStdHandle(UInt32 nStdHandle);
-        [DllImport("kernel32.dll")]
-        private static extern void SetStdHandle(UInt32 nStdHandle, IntPtr handle);
         [DllImport("kernel32.dll")]
         static extern IntPtr GetConsoleWindow();
-        [DllImport("kernel32")]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
     }
 }

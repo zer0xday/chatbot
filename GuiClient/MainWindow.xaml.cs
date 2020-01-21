@@ -23,8 +23,11 @@ namespace GuiClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Core core;
         private const string CONNECTED = "Connected";
         private const string DISCONNECTED = "Disconnected";
+        private readonly string GUI_CLIENT_FORM;
+        private readonly string CONSOLE_CLIENT_FORM;
 
         private string[] config
         {
@@ -32,19 +35,19 @@ namespace GuiClient
             set { }
         }
 
-        private Core core;
-
         public MainWindow()
         {
             InitializeComponent();
             core = new Core();
+            GUI_CLIENT_FORM = config[0];
+            CONSOLE_CLIENT_FORM = config[1];
         }
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
         {
             var dialog = new NameDialog();
             dialog.ShowDialog();
-            var result = core.Init(config[0]);
+            var result = core.Init(CONSOLE_CLIENT_FORM);
 
             rtb.AppendText($"Nick bota: {dialog.BotName}");
 

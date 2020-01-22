@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Text;
 
 namespace ChatBot
 {
@@ -8,42 +7,45 @@ namespace ChatBot
     {
         private class PluginLoader
         {
-            private const string pluginFolder = @"plugins\";
-            private const string pluginExtension = @".dll";
+            public const string MAIN_CLASS_NAME = "Plugin";
 
-            public object LoadPlugin(string pluginName)
+            public static object LoadPlugin(string pluginPath)
             {
-                var pluginAssembly = GetPluginAssembly(pluginName);
-                dynamic pluginInstance = GetPluginInstance(pluginAssembly, pluginName);
+                dynamic pluginInstance;
+
+                try
+                {
+                    var pluginAssembly = GetPluginAssembly(pluginPath);
+                    pluginInstance = GetPluginInstance(pluginAssembly);
+                } 
+                catch(Exception)
+                {
+                    throw new PluginLoadException(pluginPath);
+                }
 
                 return pluginInstance;
             }
 
-            private string GetPluginLocation(string pluginName)
+            private static Assembly GetPluginAssembly(string pluginPath)
             {
-                string baseDir = AppContext.BaseDirectory;
-                string[] explodedPath = baseDir.Split("GuiClient");
-
-                StringBuilder pluginPath = new StringBuilder();
-                pluginPath.Append(explodedPath[0]);
-                pluginPath.Append(pluginFolder);
-                pluginPath.Append(pluginName);
-                pluginPath.Append(pluginExtension);
-
-                return pluginPath.ToString();
+                return Assembly.LoadFile(pluginPath);
             }
 
-            private Assembly GetPluginAssembly(string pluginName)
+            private static string GetPluginName(Assembly pluginAssembly)
             {
-                return Assembly.LoadFile(GetPluginLocation(pluginName));
+                return pluginAssembly.GetName().Name;
             }
 
-            private dynamic GetPluginInstance(Assembly pluginAssembly, string pluginName)
+            private static dynamic GetPluginInstance(Assembly pluginAssembly)
             {
-                Type pluginType = pluginAssembly.GetType(pluginName + ".Plugin");
-                dynamic pluginInstance = Activator.CreateInstance(pluginType);
+                Type pluginType = pluginAssembly.GetType(GetPluginName(pluginAssembly) + "." + MAIN_CLASS_NAME);
+                return Activator.CreateInstance(pluginType);
+            }
 
-                return pluginInstance;
+            public class PluginLoadException : Exception
+            {
+                public PluginLoadException(string pluginPath) 
+                    : base($"Cannot load plugin: {pluginPath}") { }
             }
         }
     }

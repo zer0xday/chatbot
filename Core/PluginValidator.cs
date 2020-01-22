@@ -54,7 +54,8 @@ namespace ChatBot
         }
     }
 
-    public class PluginMissingComponentException : MissingMethodException {
+    public class PluginMissingComponentException : MissingMethodException 
+    {
         public PluginMissingComponentException(string pluginName, string cmpName, string componentName) 
             : base($"Plugin {pluginName} does not contain required {cmpName}: {componentName}") { }
     }

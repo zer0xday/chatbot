@@ -12,10 +12,12 @@ namespace ChatBot
         private const int IO_PLUGIN_INIT_TIMEOUT_SEC = 10;
 
         private dynamic pluginInstance;
+        private string botName;
 
         public void Connect(string botName, string pluginPath)
         {
-            pluginInstance = PluginLoader.LoadPlugin(pluginPath);
+            this.pluginInstance = PluginLoader.LoadPlugin(pluginPath);
+            this.botName = botName;
 
             var pluginValidator = new PluginValidator();
             pluginValidator.Validate(pluginInstance);
@@ -33,7 +35,7 @@ namespace ChatBot
             await Task.Run(() => {
                 var startTime = new DateTime();
 
-                pluginInstance.Init();
+                pluginInstance.Init(this.botName);
 
                 while(!pluginInstance.IsReady) {
                     if ((new DateTime()).Subtract(startTime).TotalSeconds >= IO_PLUGIN_INIT_TIMEOUT_SEC)
@@ -84,7 +86,7 @@ namespace ChatBot
 
         private void writeSystemMessage(string text)
         {
-            var time = (new DateTime()).GetDateTimeFormats('T')[1];
+            var time = DateTime.Now.ToString("hh:mm:ss");
             text = $"<b>[{time}]</b> {text}";
 
             OnSystemMessage(text);

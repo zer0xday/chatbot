@@ -39,7 +39,11 @@ namespace PolfanConnector
 
             if (message.GetInt(0) == 610) // ordinary chat message
             {
-                return convertMessageIntoTuple(message);
+                var tuple = convertMessageIntoTuple(message);
+                var realBotNick = "~" + this.connection.Settings.Nick;
+
+                // return null, if it's bot message
+                return tuple != null && tuple.Item1 == realBotNick ? null : tuple;
             }
 
             return null;

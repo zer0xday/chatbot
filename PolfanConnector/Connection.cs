@@ -12,6 +12,14 @@ namespace PolfanConnector
             get { return this.isLoggedIn; }
             set { }
         }
+        public ConnectionSettings Settings
+        {
+            set { }
+            get
+            {
+                return settings;
+            }
+        }
 
         protected WebsocketClient wsClient;
         protected Queue<Message> receivedMessages = new Queue<Message>();

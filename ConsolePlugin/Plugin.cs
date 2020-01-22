@@ -37,6 +37,11 @@ namespace ConsolePlugin
             getAsyncInput();
         }
 
+        public void End()
+        {
+            FreeConsole();
+        }
+
         public void SendMessage(string text)
         {
             writeMessage(this.botName, text);
@@ -85,5 +90,7 @@ namespace ConsolePlugin
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
+        [DllImport("kernel32.dll")]
+        public static extern Boolean FreeConsole();
     }
 }

@@ -17,14 +17,13 @@ using ChatBot;
 
 namespace GuiClient
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Core core;
         private const string CONNECTED = "Connected";
         private const string DISCONNECTED = "Disconnected";
+        private const string BTN_CONNECT = "Connect";
+        private const string BTN_DISCONNECT = "Disconnect";
         private readonly string USED_PLUGIN_NAME;
 
         private string[] config
@@ -47,13 +46,16 @@ namespace GuiClient
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
         {
-            var dialog = new NameDialog();
-            dialog.ShowDialog();
-            core.Connect("Tester", USED_PLUGIN_NAME);
+            var nameDialog = new NameDialog();
+            nameDialog.ShowDialog();
 
-            chatBox.NavigateToString($"<p style='color:red'>{USED_PLUGIN_NAME}</p>");
+            core.Connect(
+                nameDialog.BotName, 
+                USED_PLUGIN_NAME
+            );
 
-            // TODO: button actual status
+            chatBox.NavigateToString($"<p style='color:red'>test<br>test2</p>");
+
             ChangeConnectionStatus();
         }
 
@@ -61,10 +63,12 @@ namespace GuiClient
         {
             if (connectionStatus.Text == CONNECTED)
             {
+                connectBtn.Content = BTN_CONNECT;
                 connectionStatus.Text = DISCONNECTED;
                 connectionStatus.Foreground = new SolidColorBrush(Colors.Red);
             } else
             {
+                connectBtn.Content = BTN_DISCONNECT;
                 connectionStatus.Text = CONNECTED;
                 connectionStatus.Foreground = new SolidColorBrush(Colors.Green);
             }

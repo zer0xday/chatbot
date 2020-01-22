@@ -13,10 +13,8 @@ namespace ChatBot
 
         private dynamic pluginInstance;
 
-        public void Connect(string botName)
+        public void Connect(string botName, string pluginPath)
         {
-            string pluginPath = @"C:\Users\Szado\source\repos\cs-college-app\plugins\PolfanConnector.dll";
-
             pluginInstance = PluginLoader.LoadPlugin(pluginPath);
 
             var pluginValidator = new PluginValidator();

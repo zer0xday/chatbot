@@ -9,6 +9,7 @@ namespace GuiClient
     {
         private const string pluginFolder = @"plugins\";
         private const string pluginExtension = @".dll";
+        public string pluginName;
 
         public FileDialog()
         {
@@ -16,7 +17,6 @@ namespace GuiClient
             GetFileList();
         }
 
-        public string pluginName;
 
         private void LoadPluginBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -38,6 +38,7 @@ namespace GuiClient
                     pluginFiles.Items.Add(file);
                 }
             }
+            // handle incorrect plugins path
         }
 
         private string GetPluginsLocation()

@@ -38,7 +38,7 @@ namespace GuiClient
 
             // initialize core instance
             core = new Core();
-            // get 
+            // get used plugin
             var fileDialog = new FileDialog();
             fileDialog.ShowDialog();
 
@@ -49,7 +49,7 @@ namespace GuiClient
         {
             var dialog = new NameDialog();
             dialog.ShowDialog();
-            var result = core.Init(USED_PLUGIN_NAME);
+            core.Connect("Tester", USED_PLUGIN_NAME);
 
             chatBox.NavigateToString($"<p style='color:red'>{USED_PLUGIN_NAME}</p>");
 

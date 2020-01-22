@@ -12,8 +12,9 @@
         Background="CornflowerBlue"
 >
     <Grid>
-        <RichTextBox Width="600" Background="Black" Foreground="White" Margin="100,68,100,166" Name="rtb" />
-        <TextBlock Margin="20" Foreground="Red" FontSize="16" FontWeight="Bold" Name="connectionStatus">Disconnected</TextBlock>
+        <TextBlock Name="connectionStatus" Height="auto" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="18" Margin="10" FontWeight="Bold" Foreground="Red">Disconnected</TextBlock>
+        <WebBrowser Width="600" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 0, 0, 120" Name="chatBox"></WebBrowser>
+        <TextBox Height="28" Width="600" Name="message" Background="White" VerticalAlignment="Center" Margin="0, 290, 0, 0" Padding="5"></TextBox>
         <Button 
             Width="100" 
             Height="50" 

@@ -15,12 +15,15 @@ namespace GuiClient
 
 		private void btnDialogOkClick_Handler(object sender, RoutedEventArgs e)
 		{
-			this.DialogResult = true;
+			if (nameInput.Text.Length > 0)
+			{
+				DialogResult = true;
+			}
 		}
 
 		public string BotName
 		{
-			get { return nameInput.Text; }
+			get => nameInput.Text;
 		}
 	}
 }

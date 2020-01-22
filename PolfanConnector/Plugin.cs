@@ -56,6 +56,11 @@ namespace PolfanConnector
             this.connection.Connect(connectionSettings);
         }
 
+        public void End()
+        {
+            this.connection.Disconnect();
+        }
+
         private Tuple<string, string> convertMessageIntoTuple(Message message)
         {
             var regex = new Regex(CHAT_MESSAGE_PATTERN);

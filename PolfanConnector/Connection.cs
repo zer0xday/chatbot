@@ -29,6 +29,11 @@ namespace PolfanConnector
             wsClient.Start();
         }
 
+        public void Disconnect()
+        {
+            this.wsClient.Dispose();
+        }
+
         public Message ReceiveMessage()
         {
             try

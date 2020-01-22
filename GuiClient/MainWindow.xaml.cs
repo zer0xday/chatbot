@@ -74,6 +74,7 @@ namespace GuiClient
             {
                 chatBoxContent += message.Text;
                 message.Text = "";
+                core.SendMessage(message.Text);
             }
         }
 

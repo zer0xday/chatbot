@@ -27,7 +27,17 @@ namespace ChatBot
 
         public void Disconnect()
         {
+            pluginReadyOrFail();
+
             pluginInstance.End();
+        }
+
+        public void SendMessage(string message)
+        {
+            pluginReadyOrFail();
+
+            pluginInstance.SendMessage(message);
+            writeSystemMessage($"Bot: {message}");
         }
 
         private async void initPlugin()
@@ -66,8 +76,11 @@ namespace ChatBot
                         continue;
                     }
 
+                    writeSystemMessage($"{message.Item1}: {message.Item2}");
+
                     var response = processPharse(message.Item1, message.Item2);
                     pluginInstance.SendMessage(response);
+
                     writeSystemMessage($"Bot: {response}");
                 }
 
@@ -90,6 +103,19 @@ namespace ChatBot
             text = $"<b>[{time}]</b> {text}";
 
             OnSystemMessage(text);
+        }
+
+        private void pluginReadyOrFail()
+        {
+            if (pluginInstance == null || !pluginInstance.IsReady)
+            {
+                throw new PluginNotReadyException();
+            }
+        }
+
+        public class PluginNotReadyException : Exception 
+        { 
+            public PluginNotReadyException() : base() { }
         }
     }
 }

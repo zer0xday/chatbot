@@ -25,7 +25,7 @@ namespace GuiClient
         private const string BTN_CONNECT = "Connect";
         private const string BTN_DISCONNECT = "Disconnect";
         private readonly string USED_PLUGIN_NAME;
-
+        private string chatBoxContent = "";
         private string[] config
         {
             get => ConfigurationManager.AppSettings.AllKeys;
@@ -37,6 +37,16 @@ namespace GuiClient
 
             // initialize core instance
             core = new Core();
+
+            core.OnSystemMessage = (string message) => {
+                chatBoxContent += message;
+
+                chatBox.Dispatcher.Invoke(() => {
+                    chatBox.NavigateToString(chatBoxContent);
+                });
+            };
+
+
             // get used plugin
             var fileDialog = new FileDialog();
             fileDialog.ShowDialog();
@@ -50,13 +60,12 @@ namespace GuiClient
             nameDialog.ShowDialog();
 
             core.Connect(
-                nameDialog.BotName, 
+                nameDialog.BotName,
                 USED_PLUGIN_NAME
             );
 
-            chatBox.NavigateToString($"<p style='color:red'>test<br>test2</p>");
-
-            ChangeConnectionStatus();
+            // TODO: button actual status
+            //ChangeConnectionStatus();
         }
 
         private void ChangeConnectionStatus()

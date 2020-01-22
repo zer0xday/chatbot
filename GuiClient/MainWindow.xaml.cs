@@ -68,6 +68,15 @@ namespace GuiClient
             ChangeConnectionStatus();
         }
 
+        private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                chatBoxContent += message.Text;
+                message.Text = "";
+            }
+        }
+
         private void ChangeConnectionStatus()
         {
             if (connectionStatus.Text == CONNECTED)

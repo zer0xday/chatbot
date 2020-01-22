@@ -25,7 +25,7 @@ namespace GuiClient
         private const string BTN_CONNECT = "Connect";
         private const string BTN_DISCONNECT = "Disconnect";
         private readonly string USED_PLUGIN_NAME;
-        private string chatBoxContent = "";
+        private string chatBoxContent = "<meta charset=utf-8>";
         private string[] config
         {
             get => ConfigurationManager.AppSettings.AllKeys;
@@ -38,20 +38,21 @@ namespace GuiClient
             // initialize core instance
             core = new Core();
 
-            core.OnSystemMessage = (string message) => {
-                chatBoxContent += message;
-
-                chatBox.Dispatcher.Invoke(() => {
-                    chatBox.NavigateToString(chatBoxContent);
-                });
-            };
-
-
             // get used plugin
             var fileDialog = new FileDialog();
             fileDialog.ShowDialog();
 
             USED_PLUGIN_NAME = fileDialog.pluginName;
+
+            core.OnSystemMessage = (string message) =>
+            {
+                chatBoxContent += message + "<br>";
+
+                chatBox.Dispatcher.Invoke(() =>
+                {
+                    chatBox.NavigateToString(chatBoxContent);
+                });
+            };
         }
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
@@ -64,8 +65,7 @@ namespace GuiClient
                 USED_PLUGIN_NAME
             );
 
-            // TODO: button actual status
-            //ChangeConnectionStatus();
+            ChangeConnectionStatus();
         }
 
         private void ChangeConnectionStatus()

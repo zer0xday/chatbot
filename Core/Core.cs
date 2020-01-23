@@ -81,9 +81,12 @@ namespace ChatBot
                     writeSystemMessage($"{message.Item1}: {message.Item2}");
 
                     var response = ProcessPhrase(message.Item1, message.Item2);
-                    pluginInstance.SendMessage(response);
-
-                    writeSystemMessage($"Bot: {response}");
+                    
+                    if (response.Length > 0)
+                    {
+                        pluginInstance.SendMessage(response);
+                        writeSystemMessage($"Bot: {response}");
+                    }
                 }
             });
 
@@ -93,10 +96,8 @@ namespace ChatBot
 
         private string ProcessPhrase(string userName, string message)
         {
-            var regex = new Regex("hej|cześć|elo|witam");
-            var match = regex.Match(message);
-
-            return match.Captures.Count > 0 ? $"siemka tasiemka {userName}" : $"{userName} słuchaj co Ci powiem mądrego, głupcze ;)";
+            var dictionary = new Dictionary();
+            return dictionary.GetAnswer(message, userName);
         }
 
         private void writeSystemMessage(string text)

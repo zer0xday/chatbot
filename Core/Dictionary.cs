@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System.Reflection;
 
 namespace ChatBot
 {
@@ -9,24 +11,57 @@ namespace ChatBot
     {
         private class Dictionary
         {
-            private readonly string[] questions = new string[]
+            private Dictionary<List<string>, string> questions = new Dictionary<List<string>, string>()
             {
-                "cześć", "hej", "elo"
+                { new List<string>() { "czesc", "elo", "hej" }, "test" },
+                { new List<string>() { "pogoda" }, "WeatherAnswer" },
             };
-
-            private Regex _regex
+            // fixme: all
+            private string GetMethodToInvoke(string questionMessage)
             {
-                get => new Regex(string.Join("|", questions));
+                string method = "";
+
+                foreach (var list in questions)
+                {
+                    string regexString = "";
+
+                    foreach (var item in list.Key)
+                    {
+                        regexString += item + "|";
+                    }
+
+                    regexString = regexString.Remove(regexString.Length - 1);
+                    Regex regex = new Regex(regexString);
+                    var match = regex.Match(questionMessage);
+
+                    if (match.Captures.Count > 0)
+                    {
+                        method = list.Value;
+                        break;
+                    }
+                }
+
+                return method;
             }
 
-            public string GetAnswer(string question, string username)
+            private string WeatherAnswer()
             {
-                var match = _regex.Match(question);
+                return "TO DZIALA";
+            }
+
+            public string GetAnswer(string questionMessage, string username)
+            {
+                string methodName = GetMethodToInvoke(questionMessage);
                 string answer = "";
 
-                if (match.Captures.Count > 0) 
+                if (methodName.Length > 0)
                 {
-                    answer = "it matches";
+                    Type type = GetType();
+                    // something breaks here
+                    //MethodInfo method = type.GetMethod(methodName);
+                    //var answerObject = method.Invoke(this, null);
+
+                    return "testedd";
                 }
 
                 return answer;

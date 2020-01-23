@@ -81,7 +81,7 @@ namespace ChatBot
                     writeSystemMessage($"{message.Item1}: {message.Item2}");
 
                     var response = ProcessPhrase(message.Item1, message.Item2);
-                    
+
                     if (response.Length > 0)
                     {
                         pluginInstance.SendMessage(response);

@@ -53,6 +53,14 @@ namespace GuiClient
                     chatBox.NavigateToString(chatBoxContent);
                 });
             };
+
+            core.OnStateChange = (bool isReady) =>
+            {
+                connectionStatus.Dispatcher.Invoke(() =>
+                {
+                    ChangeConnectionStatus(isReady);
+                });
+            };
         }
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
@@ -64,8 +72,6 @@ namespace GuiClient
                 nameDialog.BotName,
                 USED_PLUGIN_NAME
             );
-
-            ChangeConnectionStatus();
         }
 
         private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
@@ -78,18 +84,18 @@ namespace GuiClient
             }
         }
 
-        private void ChangeConnectionStatus()
+        private void ChangeConnectionStatus(bool isConnected)
         {
-            if (connectionStatus.Text == CONNECTED)
-            {
-                connectBtn.Content = BTN_CONNECT;
-                connectionStatus.Text = DISCONNECTED;
-                connectionStatus.Foreground = new SolidColorBrush(Colors.Red);
-            } else
+            if (isConnected)
             {
                 connectBtn.Content = BTN_DISCONNECT;
                 connectionStatus.Text = CONNECTED;
                 connectionStatus.Foreground = new SolidColorBrush(Colors.Green);
+            } else
+            {
+                connectBtn.Content = BTN_CONNECT;
+                connectionStatus.Text = DISCONNECTED;
+                connectionStatus.Foreground = new SolidColorBrush(Colors.Red);
             }
         }
     }

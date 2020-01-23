@@ -71,11 +71,12 @@ namespace GuiClient
 
         private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Return)
+            string text = message.Text.Trim();
+            message.Text = "";
+
+            if (e.Key == Key.Return && text.Length > 0)
             {
-                chatBoxContent += message.Text;
-                message.Text = "";
-                core.SendMessage(message.Text);
+                core.SendMessage(message.Text);    
             }
         }
 

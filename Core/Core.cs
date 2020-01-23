@@ -42,11 +42,10 @@ namespace ChatBot
 
         private async void initPlugin()
         {
-            await Task.Run(() => {
-                var startTime = new DateTime();
+            var startTime = new DateTime();
+            pluginInstance.Init(this.botName);
 
-                pluginInstance.Init(this.botName);
-
+            await Task.Run(async () => {
                 while(!pluginInstance.IsReady) {
                     if ((new DateTime()).Subtract(startTime).TotalSeconds >= IO_PLUGIN_INIT_TIMEOUT_SEC)
                     {
@@ -54,6 +53,8 @@ namespace ChatBot
                         OnStateChange(false);
                         return;
                     }
+
+                    await Task.Delay(100);
                 }
 
                 writeSystemMessage("The input/output plugin has successfully initialized.");
@@ -64,15 +65,19 @@ namespace ChatBot
 
         private async void runMainLoop()
         {
-            await Task.Run(() => {
-                writeSystemMessage("The conversation has begun.");
+            writeSystemMessage("The conversation has begun.");
 
+            //await Task.Factory.StartNew(, TaskCreationOptions.LongRunning);
+
+
+            await Task.Run(async () => {
                 while (pluginInstance.IsReady)
                 {
                     Tuple<string, string> message = pluginInstance.GetMessage();
 
                     if (message == null)
                     {
+                        await Task.Delay(100);
                         continue;
                     }
 
@@ -83,10 +88,10 @@ namespace ChatBot
 
                     writeSystemMessage($"Bot: {response}");
                 }
-
-                writeSystemMessage("The conversation has ended.");
-                OnStateChange(false);
             });
+
+            writeSystemMessage("The conversation has ended.");
+            OnStateChange(false);
         }
 
         private string ProcessPhrase(string userName, string message)

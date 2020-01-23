@@ -19,6 +19,9 @@ namespace PolfanConnector
 
         public void SendMessage(string messageContent)
         {
+            messageContent = Regex.Replace(messageContent, @"\t|\n|\r", "");
+            messageContent = messageContent.Trim();
+
             var message = new Message();
             message
                 .AddString(messageContent)

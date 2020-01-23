@@ -67,9 +67,6 @@ namespace ChatBot
         {
             writeSystemMessage("The conversation has begun.");
 
-            //await Task.Factory.StartNew(, TaskCreationOptions.LongRunning);
-
-
             await Task.Run(async () => {
                 while (pluginInstance.IsReady)
                 {

@@ -84,7 +84,7 @@ namespace GuiClient
                 {
                     try
                     {
-                        core.SendMessage(message.Text);   
+                        core.SendMessage(text);   
                     } catch (Core.PluginNotReadyException) { }
                 }
             }

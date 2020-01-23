@@ -75,11 +75,18 @@ namespace GuiClient
         private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
         {
             string text = message.Text.Trim();
-            message.Text = "";
-
-            if (e.Key == Key.Return && text.Length > 0)
+            
+            if (e.Key == Key.Return)
             {
-                core.SendMessage(message.Text);    
+                message.Text = "";
+
+                if (text.Length > 0)
+                {
+                    try
+                    {
+                        core.SendMessage(message.Text);   
+                    } catch (Core.PluginNotReadyException) { }
+                }
             }
         }
 

@@ -34,6 +34,8 @@ namespace PolfanConnector
             wsClient.ReconnectionHappened.Subscribe(type => handleReconnect(type.Type));
             wsClient.MessageReceived.Subscribe(msg => handleIncomingFrame(msg.ToString()));
             wsClient.DisconnectionHappened.Subscribe(ev => handleDisconnect());
+            wsClient.IsReconnectionEnabled = false;
+
             wsClient.Start();
         }
 

@@ -17,7 +17,6 @@ namespace GuiClient
             GetFileList();
         }
 
-
         private void LoadPluginBtn_Click(object sender, RoutedEventArgs e)
         {
             if (pluginFiles.SelectedItem != null)
@@ -29,16 +28,22 @@ namespace GuiClient
 
         private void GetFileList()
         {
-            if (Directory.Exists(GetPluginsLocation()))
+            if (!Directory.Exists(GetPluginsLocation()))
             {
-                string[] files = GetFiles();
-
-                foreach (string file in files)
-                {
-                    pluginFiles.Items.Add(file);
-                }
+                MessageBox.Show(
+                    "Nie można odnaleźć żadnego pluginu załączonego do aplikacji" +
+                    " lub ścieżki aplikacji zostały niepoprawnie zmodyfikowane."
+                );
+                Application.Current.Shutdown();
+                return;
             }
-            // handle incorrect plugins path
+
+            string[] files = GetFiles();
+
+            foreach (string file in files)
+            {
+                pluginFiles.Items.Add(file);
+            }
         }
 
         private string GetPluginsLocation()

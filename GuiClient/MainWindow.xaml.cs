@@ -20,10 +20,10 @@ namespace GuiClient
     public partial class MainWindow : Window
     {
         private Core core;
-        private const string CONNECTED = "Connected";
-        private const string DISCONNECTED = "Disconnected";
-        private const string BTN_CONNECT = "Connect";
-        private const string BTN_DISCONNECT = "Disconnect";
+        private const string CONNECTED = "Połączony";
+        private const string DISCONNECTED = "Rozłączony";
+        private const string BTN_CONNECT = "Połącz";
+        private const string BTN_DISCONNECT = "Rozłącz";
         private readonly string USED_PLUGIN_NAME;
         private string chatBoxContent = "<meta charset=utf-8>";
         private string[] config
@@ -35,13 +35,9 @@ namespace GuiClient
         {
             InitializeComponent();
 
-            // initialize core instance
             core = new Core();
 
-            // get used plugin
-            var fileDialog = new FileDialog();
-            fileDialog.ShowDialog();
-            USED_PLUGIN_NAME = fileDialog.pluginName;
+            USED_PLUGIN_NAME = GetUsedPlugin();
 
             // listen to messages
             core.OnSystemMessage = (string message) =>
@@ -63,11 +59,18 @@ namespace GuiClient
             var nameDialog = new NameDialog();
             nameDialog.ShowDialog();
 
+            if (nameDialog.DialogResult == false)
+            {
+                return;
+            }
+
             core.Connect(
                 nameDialog.BotName,
                 USED_PLUGIN_NAME
             );
         }
+
+        private void ConnectToChat() { }
 
         private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
         {
@@ -77,6 +80,20 @@ namespace GuiClient
                 message.Text = "";
                 core.SendMessage(message.Text);
             }
+        }
+
+        private string GetUsedPlugin()
+        {
+            var fileDialog = new FileDialog();
+            fileDialog.ShowDialog();
+
+            if (fileDialog.DialogResult == false)
+            {
+                App.Current.Shutdown();
+                return null;
+            }
+
+            return fileDialog.pluginName;
         }
 
         private void ChangeConnectionStatus(bool isConnected)

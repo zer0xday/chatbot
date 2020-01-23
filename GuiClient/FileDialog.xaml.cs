@@ -8,7 +8,6 @@ namespace GuiClient
     public partial class FileDialog : Window
     {
         private const string pluginFolder = @"plugins\";
-        private const string pluginExtension = @".dll";
         public string pluginName;
 
         public FileDialog()

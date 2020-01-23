@@ -25,7 +25,7 @@
             Click="ConnectButton_Handler"
             Name="connectBtn"
         >
-            Connect
+            Połącz
         </Button>
     </Grid>
 </Window>

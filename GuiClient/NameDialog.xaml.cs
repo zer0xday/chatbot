@@ -3,9 +3,6 @@ using System.Windows;
 
 namespace GuiClient
 {
-    /// <summary>
-    /// Interaction logic for NameDialog.xaml
-    /// </summary>
     public partial class NameDialog : Window
     {
 		public NameDialog()

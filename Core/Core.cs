@@ -78,7 +78,7 @@ namespace ChatBot
 
                     writeSystemMessage($"{message.Item1}: {message.Item2}");
 
-                    var response = processPharse(message.Item1, message.Item2);
+                    var response = ProcessPhrase(message.Item1, message.Item2);
                     pluginInstance.SendMessage(response);
 
                     writeSystemMessage($"Bot: {response}");
@@ -89,7 +89,7 @@ namespace ChatBot
             });
         }
 
-        private string processPharse(string userName, string message)
+        private string ProcessPhrase(string userName, string message)
         {
             var regex = new Regex("hej|cześć|elo|witam");
             var match = regex.Match(message);

@@ -41,25 +41,20 @@ namespace GuiClient
             // get used plugin
             var fileDialog = new FileDialog();
             fileDialog.ShowDialog();
-
             USED_PLUGIN_NAME = fileDialog.pluginName;
 
+            // listen to messages
             core.OnSystemMessage = (string message) =>
             {
                 chatBoxContent += message + "<br>";
 
-                chatBox.Dispatcher.Invoke(() =>
-                {
-                    chatBox.NavigateToString(chatBoxContent);
-                });
+                chatBox.Dispatcher.Invoke(() => chatBox.NavigateToString(chatBoxContent));
             };
 
+            // listen to plugin state
             core.OnStateChange = (bool isReady) =>
             {
-                connectionStatus.Dispatcher.Invoke(() =>
-                {
-                    ChangeConnectionStatus(isReady);
-                });
+                connectionStatus.Dispatcher.Invoke(() => ChangeConnectionStatus(isReady));
             };
         }
 

@@ -9,14 +9,26 @@ namespace ChatBot
 {
     partial class Core
     {
-        private class Dictionary
+        private class Answer
         {
             private Dictionary<List<string>, string> questions = new Dictionary<List<string>, string>()
             {
-                { new List<string>() { "czesc", "elo", "hej" }, "test" },
-                { new List<string>() { "pogoda" }, "WeatherAnswer" },
+                { 
+                    new List<string>() 
+                    { 
+                        "czesc", "cześć", "siemka", "siema", "elo", "hej", "witam" 
+                    }, 
+                    "WelcomeAnswer" 
+                },
+                { 
+                    new List<string>() 
+                    { 
+                        "pogoda" 
+                    }, 
+                    "WeatherAnswer"
+                }
             };
-            // fixme: all
+
             private string GetMethodToInvoke(string questionMessage)
             {
                 string method = "";
@@ -40,31 +52,44 @@ namespace ChatBot
                         break;
                     }
                 }
-
                 return method;
-            }
-
-            private string WeatherAnswer()
-            {
-                return "TO DZIALA";
             }
 
             public string GetAnswer(string questionMessage, string username)
             {
                 string methodName = GetMethodToInvoke(questionMessage);
+                string[] parameters = new string[2] 
+                {
+                    questionMessage, 
+                    username 
+                };
                 string answer = "";
 
                 if (methodName.Length > 0)
                 {
                     Type type = GetType();
-                    // something breaks here
-                    //MethodInfo method = type.GetMethod(methodName);
-                    //var answerObject = method.Invoke(this, null);
+                    MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
 
-                    return "testedd";
+                    if (method == null)
+                    {
+                        return "";
+                    }
+
+                    var answerObject = method.Invoke(this, parameters);
+
+                    return answerObject.ToString();
                 }
-
                 return answer;
+            }
+
+            private string WelcomeAnswer(string question, string username)
+            {
+                return $"Dzień dobry, {username}!";
+            }
+
+            private string WeatherAnswer(string question, string username)
+            {
+                return "Pogoda - będzie zimno, będzie wiało, wszędzie będzie pizgało.";
             }
         }
     }

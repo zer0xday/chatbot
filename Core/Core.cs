@@ -96,7 +96,7 @@ namespace ChatBot
 
         private string ProcessPhrase(string userName, string message)
         {
-            var dictionary = new Dictionary();
+            var dictionary = new Answer();
             return dictionary.GetAnswer(message, userName);
         }
 

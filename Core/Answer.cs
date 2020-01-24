@@ -23,7 +23,7 @@ namespace ChatBot
                 { 
                     new List<string>() 
                     { 
-                        "pogoda" 
+                        "pogoda"
                     }, 
                     "WeatherAnswer"
                 }
@@ -35,15 +35,9 @@ namespace ChatBot
 
                 foreach (var list in questions)
                 {
-                    string regexString = "";
+                    string pattern = GetRegexPattern(list.Key);
 
-                    foreach (var item in list.Key)
-                    {
-                        regexString += item + "|";
-                    }
-
-                    regexString = regexString.Remove(regexString.Length - 1);
-                    Regex regex = new Regex(regexString);
+                    Regex regex = new Regex(pattern);
                     var match = regex.Match(questionMessage);
 
                     if (match.Captures.Count > 0)
@@ -53,6 +47,43 @@ namespace ChatBot
                     }
                 }
                 return method;
+            }
+
+            private string GetRegexPattern(List<string> questionsList)
+            {
+                string pattern = "";
+
+                GetNormalPattern(questionsList, ref pattern);
+                GetUpperCasePattern(questionsList, ref pattern);
+                GetFirstUpperCasePattern(questionsList, ref pattern);
+
+                pattern = pattern.Remove(pattern.Length - 1);
+
+                return pattern;
+            }
+
+            private void GetNormalPattern(List<string> questionsList, ref string _pattern)
+            {
+                foreach (var item in questionsList)
+                {
+                    _pattern += item + "|";
+                }
+            }
+
+            private void GetUpperCasePattern(List<string> questionsList, ref string _pattern)
+            {
+                foreach (var item in questionsList)
+                {
+                    _pattern += item.ToUpper() + "|";
+                }
+            }
+
+            private void GetFirstUpperCasePattern(List<string> questionsList, ref string _pattern)
+            {
+                foreach (var item in questionsList)
+                {
+                    _pattern += item.First().ToString().ToUpper() + item.Substring(1) + "|";
+                }
             }
 
             public string GetAnswer(string questionMessage, string username)
@@ -72,7 +103,7 @@ namespace ChatBot
 
                     if (method == null)
                     {
-                        return "";
+                        throw new ArgumentNullException();
                     }
 
                     var answerObject = method.Invoke(this, parameters);
@@ -84,7 +115,11 @@ namespace ChatBot
 
             private string WelcomeAnswer(string question, string username)
             {
-                return $"Dzień dobry, {username}!";
+                List<string> list = questions.Keys.First();
+                Random rnd = new Random();
+                int randomIndex = rnd.Next(list.Count);
+
+                return $"{list[randomIndex]}, {username}!";
             }
 
             private string WeatherAnswer(string question, string username)

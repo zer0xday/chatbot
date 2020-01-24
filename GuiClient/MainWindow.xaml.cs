@@ -20,16 +20,13 @@ namespace GuiClient
     public partial class MainWindow : Window
     {
         private Core core;
-        private const string CONNECTED = "Połączony";
-        private const string DISCONNECTED = "Rozłączony";
-        private const string BTN_CONNECT = "Połącz";
-        private const string BTN_DISCONNECT = "Rozłącz";
         private readonly string USED_PLUGIN_NAME;
         private string chatBoxContent = "<meta charset=utf-8>";
         private string[] config
         {
             get => ConfigurationManager.AppSettings.AllKeys;
         }
+        private bool isReady = false;
 
         public MainWindow()
         {
@@ -39,55 +36,57 @@ namespace GuiClient
 
             USED_PLUGIN_NAME = GetUsedPlugin();
 
+            statusBarText.Text = "Gotowy";
+
             // listen to messages
             core.OnSystemMessage = (string message) =>
             {
                 chatBoxContent += message + "<br>";
-
                 chatBox.Dispatcher.Invoke(() => chatBox.NavigateToString(chatBoxContent));
             };
 
             // listen to plugin state
-            core.OnStateChange = (bool isReady) =>
-            {
-                connectionStatus.Dispatcher.Invoke(() => ChangeConnectionStatus(isReady));
+            core.OnStateChange = (bool isReady) => {
+                this.isReady = isReady;
+                ChangeConnectionStatus(isReady);
             };
         }
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
         {
-            var nameDialog = new NameDialog();
-            nameDialog.ShowDialog();
-
-            if (nameDialog.DialogResult == false)
+            if (isReady)
             {
-                return;
+                core.Disconnect();
+            } 
+            else
+            {
+                var nameDialog = new NameDialog();
+                nameDialog.ShowDialog();
+
+                if (nameDialog.DialogResult == false)
+                {
+                    return;
+                }
+
+                core.Connect(
+                    nameDialog.BotName,
+                    USED_PLUGIN_NAME
+                );
             }
-
-            core.Connect(
-                nameDialog.BotName,
-                USED_PLUGIN_NAME
-            );
         }
-
-        private void ConnectToChat() { }
 
         private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
         {
-            string text = message.Text.Trim();
-            
             if (e.Key == Key.Return)
             {
-                message.Text = "";
+                sendMessageFromField();
 
-                if (text.Length > 0)
-                {
-                    try
-                    {
-                        core.SendMessage(text);   
-                    } catch (Core.PluginNotReadyException) { }
-                }
             }
+        }
+
+        private void sendButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendMessageFromField();
         }
 
         private string GetUsedPlugin()
@@ -106,16 +105,34 @@ namespace GuiClient
 
         private void ChangeConnectionStatus(bool isConnected)
         {
-            if (isConnected)
+            connectBtn.Dispatcher.Invoke(() =>
             {
-                connectBtn.Content = BTN_DISCONNECT;
-                connectionStatus.Text = CONNECTED;
-                connectionStatus.Foreground = new SolidColorBrush(Colors.Green);
-            } else
+                connectBtn.Content = isConnected ? "Zakończ rozmowę" : "Rozpocznij rozmowę";
+            });
+
+            statusBarText.Dispatcher.Invoke(() => 
+            { 
+                statusBarText.Text = isConnected ? "W trakcie rozmowy" : "Rozmowa zakończona";
+            });
+
+            sendButton.Dispatcher.Invoke(() =>
             {
-                connectBtn.Content = BTN_CONNECT;
-                connectionStatus.Text = DISCONNECTED;
-                connectionStatus.Foreground = new SolidColorBrush(Colors.Red);
+                sendButton.IsEnabled = isConnected;
+            });
+        }
+
+        private void sendMessageFromField()
+        {
+            string text = message.Text.Trim();            
+            message.Text = "";
+
+            if (text.Length > 0)
+            {
+                try
+                {
+                    core.SendMessage(text);
+                }
+                catch (Core.PluginNotReadyException) { }
             }
         }
     }

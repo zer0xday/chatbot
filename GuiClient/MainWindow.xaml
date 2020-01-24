@@ -5,27 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GuiClient"
         mc:Ignorable="d"
-        Title="Polfan ChatBot" 
-        Height="600" 
+        Title="ChatBot" 
+        Height="531" 
         Width="800"
         WindowStartupLocation="CenterScreen"
         Background="CornflowerBlue"
 >
     <Grid>
-        <TextBlock Name="connectionStatus" Height="auto" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="18" Margin="10" FontWeight="Bold" Foreground="Red">Disconnected</TextBlock>
-        <WebBrowser Width="600" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 0, 0, 120" Name="chatBox"></WebBrowser>
-        <TextBox Name="message" Height="28" Width="600" Background="White" VerticalAlignment="Center" Margin="0, 290, 0, 0" Padding="5" KeyDown="OnEnterKeyDown_Handler"></TextBox>
+        <WebBrowser HorizontalAlignment="Center" VerticalAlignment="Top" Name="chatBox" Margin="10,10,10,0" Panel.ZIndex="2" Height="380" Grid.Column="2"/>
+        <TextBox Name="message" Background="White" VerticalAlignment="Bottom" Margin="10,0,10,70" Padding="5" KeyDown="OnEnterKeyDown_Handler"/>
         <Button 
-            Width="100" 
-            Height="50" 
+            Width="147" 
+            Height="25" 
             FontSize="14"
             VerticalAlignment="Bottom"
-            Margin="50"
-            HorizontalAlignment="Center"
+            Margin="0,0,80,35"
+            HorizontalAlignment="Right"
             Click="ConnectButton_Handler"
             Name="connectBtn"
         >
-            Połącz
+            Rozpocznij rozmowę
         </Button>
+        <StatusBar VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock x:Name="statusBarText" VerticalAlignment="Stretch"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+        <Button x:Name="sendButton" Content="Wyślij" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Height="25" Width="65" Click="sendButton_Click" FontSize="14" IsEnabled="False"/>
     </Grid>
 </Window>

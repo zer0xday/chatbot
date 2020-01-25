@@ -32,5 +32,6 @@
             </StatusBarItem>
         </StatusBar>
         <Button x:Name="sendButton" Content="Wyślij" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Height="25" Width="65" Click="sendButton_Click" FontSize="14" IsEnabled="False"/>
+        <Button x:Name="changePluginButton" Content="Zmień plugin" HorizontalAlignment="Left" Margin="10,455,0,35" VerticalAlignment="Bottom" Height="25" Width="116" Click="changePluginButton_Click"/>
     </Grid>
 </Window>

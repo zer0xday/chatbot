@@ -58,14 +58,11 @@ namespace PolfanConnector
 
         public void SendMessage(Message message)
         {
-            Console.WriteLine($"SendMessage: {message.GetJson()}");
             wsClient.Send(message.GetJson());
         }
 
         protected void handleIncomingFrame(string frame)
         {
-            Console.WriteLine($"handleIncomingFrame: {frame}");
-
             var message = new Message();
             message.SetJson(frame);
 
@@ -85,7 +82,6 @@ namespace PolfanConnector
 
         protected void handleReconnect(ReconnectionType type)
         {
-            Console.WriteLine($"handleReconnect: {type}, {settings.UriString}, {settings.Nick}, {settings.Room}");
             sendLogIn();
         }
 

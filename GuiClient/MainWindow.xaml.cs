@@ -20,7 +20,7 @@ namespace GuiClient
     public partial class MainWindow : Window
     {
         private Core core;
-        private readonly string USED_PLUGIN_NAME;
+        private string usedPluginPath;
         private string chatBoxContent = "<meta charset=utf-8>";
         private string[] config
         {
@@ -34,7 +34,7 @@ namespace GuiClient
 
             core = new Core();
 
-            USED_PLUGIN_NAME = GetUsedPlugin();
+            usedPluginPath = GetUsedPlugin();
 
             statusBarText.Text = "Gotowy";
 
@@ -70,7 +70,7 @@ namespace GuiClient
 
                 core.Connect(
                     nameDialog.BotName,
-                    USED_PLUGIN_NAME
+                    usedPluginPath
                 );
             }
         }
@@ -134,6 +134,30 @@ namespace GuiClient
                 }
                 catch (Core.PluginNotReadyException) { }
             }
+        }
+
+        private void changePluginButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isReady)
+            {
+                var result = MessageBox.Show(
+                    "Obecnie trwająca rozmowa zostanie zakończona. Kontynuować?",
+                    "Potwierdź zmianę pluginu",
+                    MessageBoxButton.YesNo
+                );
+
+                if (result != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                try
+                {
+                    core.Disconnect();
+                } catch (Core.PluginNotReadyException) { }
+            }
+
+            usedPluginPath = GetUsedPlugin();
         }
     }
 }

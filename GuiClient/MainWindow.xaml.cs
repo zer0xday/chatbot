@@ -38,18 +38,8 @@ namespace GuiClient
 
             statusBarText.Text = "Gotowy";
 
-            // listen to messages
-            core.OnSystemMessage = (string message) =>
-            {
-                chatBoxContent += message + "<br>";
-                chatBox.Dispatcher.Invoke(() => chatBox.NavigateToString(chatBoxContent));
-            };
-
-            // listen to plugin state
-            core.OnStateChange = (bool isReady) => {
-                this.isReady = isReady;
-                ChangeConnectionStatus(isReady);
-            };
+            ListenToMessages();
+            ListenToPluginStates();
         }
 
         private void ConnectButton_Handler(object sender, RoutedEventArgs e)
@@ -75,12 +65,28 @@ namespace GuiClient
             }
         }
 
+        private void ListenToMessages()
+        {
+            core.OnSystemMessage = (string message) =>
+            {
+                chatBoxContent += message + "<br>";
+                chatBox.Dispatcher.Invoke(() => chatBox.NavigateToString(chatBoxContent));
+            };
+        }
+
+        private void ListenToPluginStates()
+        {
+            core.OnStateChange = (bool isReady) => {
+                this.isReady = isReady;
+                ChangeConnectionStatus(isReady);
+            };
+        }
+
         private void OnEnterKeyDown_Handler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
                 sendMessageFromField();
-
             }
         }
 
@@ -123,6 +129,11 @@ namespace GuiClient
 
         private void sendMessageFromField()
         {
+            if (!isReady)
+            {
+                return;
+            }
+
             string text = message.Text.Trim();            
             message.Text = "";
 

@@ -13,7 +13,7 @@ namespace ChatBot.Tests
         public string PLUGIN_PATH = @"C:\Users\Szado\source\repos\cs-college-app\plugins\PolfanConnector.dll";
 
         [TestMethod()]
-        public void SendMessageTest()
+        public void SendMessageNotReadyPluginTest()
         {
             var core = new Core();
             var message = "test string";
@@ -25,7 +25,7 @@ namespace ChatBot.Tests
         }
 
         [TestMethod()]
-        public void DisconnectTest()
+        public void DisconnectNotReadyPluginTest()
         {
             var core = new Core();
 

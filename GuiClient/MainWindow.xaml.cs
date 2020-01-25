@@ -22,10 +22,6 @@ namespace GuiClient
         private Core core;
         private readonly string USED_PLUGIN_NAME;
         private string chatBoxContent = "<meta charset=utf-8>";
-        private string[] config
-        {
-            get => ConfigurationManager.AppSettings.AllKeys;
-        }
         private bool isReady = false;
 
         public MainWindow()

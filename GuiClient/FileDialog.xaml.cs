@@ -29,10 +29,7 @@ namespace GuiClient
         {
             if (!Directory.Exists(GetPluginsLocation()))
             {
-                MessageBox.Show(
-                    "Nie można odnaleźć żadnego pluginu załączonego do aplikacji" +
-                    " lub ścieżki aplikacji zostały niepoprawnie zmodyfikowane."
-                );
+                MessageBox.Show("Ścieżki aplikacji zostały niepoprawnie zmodyfikowane.");
                 Application.Current.Shutdown();
                 return;
             }

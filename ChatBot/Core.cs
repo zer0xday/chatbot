@@ -43,13 +43,23 @@ namespace ChatBot
         private async void initPlugin()
         {
             var startTime = new DateTime();
-            pluginInstance.Init(this.botName);
+
+            try
+            {
+                pluginInstance.Init(this.botName);
+            }
+            catch (Exception exception)
+            {
+                writeSystemMessage($"Błąd inicjalizacji pluginu: {exception.Message}");
+                OnStateChange(false);
+                return;
+            }
 
             await Task.Run(async () => {
                 while(!pluginInstance.IsReady) {
                     if ((new DateTime()).Subtract(startTime).TotalSeconds >= IO_PLUGIN_INIT_TIMEOUT_SEC)
                     {
-                        writeSystemMessage($"Cannot load input/output plugin: {IO_PLUGIN_INIT_TIMEOUT_SEC} seconds timeout was exceeded.");
+                        writeSystemMessage($"Nie można załadować pluginu: limit {IO_PLUGIN_INIT_TIMEOUT_SEC} sek. czasu oczekiwania został przekoczony.");
                         OnStateChange(false);
                         return;
                     }
@@ -57,7 +67,7 @@ namespace ChatBot
                     await Task.Delay(100);
                 }
 
-                writeSystemMessage("The input/output plugin has successfully initialized.");
+                writeSystemMessage("Plugin wejścia/wyjścia został zainicjalizowany.");
                 OnStateChange(true);
                 runMainLoop();
             });
@@ -65,7 +75,7 @@ namespace ChatBot
 
         private async void runMainLoop()
         {
-            writeSystemMessage("The conversation has begun.");
+            writeSystemMessage("Rozmowa się rozpoczęła.");
 
             await Task.Run(async () => {
                 while (pluginInstance.IsReady)
@@ -90,7 +100,7 @@ namespace ChatBot
                 }
             });
 
-            writeSystemMessage("The conversation has ended.");
+            writeSystemMessage("Rozmowa się zakończyła.");
             OnStateChange(false);
         }
 

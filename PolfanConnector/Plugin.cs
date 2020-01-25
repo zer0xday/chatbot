@@ -51,6 +51,11 @@ namespace PolfanConnector
 
         public void Init(string botName)
         {
+            if (botName.Contains(" "))
+            {
+                throw new Exception("Nick czatowy nie może zawierać spacji, znaków specjalnych ani diakrytycznych.");
+            }
+
             var connectionSettings = new ConnectionSettings(){
                 UriString = CHAT_SERVER_URL,
                 Nick = botName,

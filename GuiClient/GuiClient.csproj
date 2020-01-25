@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\ChatBot.csproj" />
-    <ProjectReference Include="..\PolfanConnector\PolfanConnector.csproj" />
+    <ProjectReference Include="..\ChatBot\ChatBot.csproj" />
   </ItemGroup>
 
   <ItemGroup>

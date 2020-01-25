@@ -2,11 +2,15 @@
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 
 namespace ConsolePlugin
 {
     public class Plugin
     {
+        private const string EXIT_COMMAND = "!exit";
+
         public bool IsReady
         {
             set { }
@@ -22,17 +26,21 @@ namespace ConsolePlugin
         {
             if (GetConsoleWindow() == IntPtr.Zero)
             {
-                
+                openConsole();                
             }
-AllocConsole();
-            Console.WriteLine($"[=== Rozmowa z botem {botName} ===]");
-            Console.WriteLine("Podaj swój pseudonim:");
+
+            Console.Title = $"Rozmowa z botem {botName}";
+            Console.WriteLine("Plugin konsoli służy wyłączonie do lokalnych testów bota.");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Aby zakończyć, wpisz \"{EXIT_COMMAND}\". Zamknięcie okna konsoli, spowoduje zamknięcie programu.\n");
+            Console.ResetColor();
+            Console.WriteLine("[========== Podaj swój pseudonim. ==========]");
 
             this.userName = Console.ReadLine();
             this.botName = botName;
             this.isReady = true;
 
-            Console.WriteLine( "[=== Rozmowa rozpoczęta. Przywitaj się. ===]");
+            Console.WriteLine( "\n[=== Rozmowa rozpoczęta - przywitaj się. ===]");
 
             getAsyncInput();
         }
@@ -40,7 +48,7 @@ AllocConsole();
         public void End()
         {
             isReady = false;
-            FreeConsole();
+            closeConsole();
         }
 
         public void SendMessage(string text)
@@ -86,8 +94,15 @@ AllocConsole();
                     return;
                 }
 
-                if (message.Length > 0)
+                if (message != null && message.Length > 0)
                 {
+                    if (message == EXIT_COMMAND)
+                    {
+                        End();
+                        repeat = false;
+                        return;
+                    }
+
                     // overwrite last line in console
                     Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
                     writeMessage(this.userName, message);
@@ -99,6 +114,24 @@ AllocConsole();
             {
                 getAsyncInput();
             }
+        }
+
+        private void openConsole()
+        {
+            AllocConsole();
+            
+            TextWriter writer = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
+            Console.SetOut(writer);
+            Console.OutputEncoding = Encoding.UTF8;
+
+            StreamReader reader = new StreamReader(Console.OpenStandardInput());
+            Console.SetIn(reader);
+            Console.InputEncoding = Encoding.UTF8;
+        }
+
+        private void closeConsole()
+        {
+            FreeConsole();
         }
 
         [DllImport("kernel32.dll")]

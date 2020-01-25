@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBot", "ChatBot\ChatBot.
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ProjectInstaller", "ProjectInstaller\ProjectInstaller.vdproj", "{7A40A7CB-5EBB-48AD-9F5F-F318BFD73EFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBotTests", "ChatBotTests\ChatBotTests.csproj", "{9090252E-59C5-4D57-ACF7-5835300615D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{6DB2F99A-EE8C-4183-9C5C-A8C6F817B8EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A40A7CB-5EBB-48AD-9F5F-F318BFD73EFB}.Debug|Any CPU.ActiveCfg = Debug
 		{7A40A7CB-5EBB-48AD-9F5F-F318BFD73EFB}.Release|Any CPU.ActiveCfg = Release
+		{9090252E-59C5-4D57-ACF7-5835300615D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9090252E-59C5-4D57-ACF7-5835300615D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9090252E-59C5-4D57-ACF7-5835300615D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9090252E-59C5-4D57-ACF7-5835300615D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

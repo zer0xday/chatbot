@@ -4,6 +4,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Reflection;
+using RestSharp;
+using Newtonsoft.Json;
 
 namespace ChatBot
 {
@@ -124,8 +126,33 @@ namespace ChatBot
 
             private string WeatherAnswer(string question, string username)
             {
-                return "Pogoda - będzie zimno, będzie wiało, wszędzie będzie pizgało.";
+                const string httpsRequest = "https://api.openweathermap.org/data/2.5/weather?q=Krakow,pl&appid=d488bec22a52041e1f7455123c831df3&units=metric";
+                var client = new RestClient(httpsRequest);
+                var request = new RestRequest(Method.GET);
+
+                IRestResponse response = client.Execute(request);
+                var responseJson = JsonConvert.DeserializeObject<Weather>(response.Content);
+
+                StringBuilder responseStringBuilder = new StringBuilder();
+                responseStringBuilder.Append("Pogoda w mieście ");
+                responseStringBuilder.Append(responseJson.name);
+                responseStringBuilder.Append(" wynosi: ");
+                responseStringBuilder.Append(responseJson.main.temp);
+                responseStringBuilder.Append("°C");
+
+                return responseStringBuilder.ToString();
             }
+        }
+
+        private class Weather
+        {
+            public string name { get; set; }
+            public WeatherMain main { get; set; }
+        }
+
+        private class WeatherMain
+        {
+            public float temp { get; set; }
         }
     }
 }

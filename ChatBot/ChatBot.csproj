@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -8,13 +8,6 @@
     <AssemblyName>ChatBot</AssemblyName>
     <RootNamespace>ChatBot</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="docfx.console" Version="2.48.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PolfanConnector\PolfanConnector.csproj" />

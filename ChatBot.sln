@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuiClient", "GuiClient\GuiC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolfanConnector", "PolfanConnector\PolfanConnector.csproj", "{06CEF418-DD6D-4F17-AD52-528059F971C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolfanConnectorTester", "PolfanConnectorTester\PolfanConnectorTester.csproj", "{56F9AE42-4F65-4A67-A32E-DCF7C4130DFF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsolePlugin", "ConsolePlugin\ConsolePlugin.csproj", "{10789E8C-8D62-42BC-ACEC-9A11633B95B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBot", "ChatBot\ChatBot.csproj", "{6DB2F99A-EE8C-4183-9C5C-A8C6F817B8EC}"
@@ -27,10 +25,6 @@ Global
 		{06CEF418-DD6D-4F17-AD52-528059F971C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06CEF418-DD6D-4F17-AD52-528059F971C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06CEF418-DD6D-4F17-AD52-528059F971C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56F9AE42-4F65-4A67-A32E-DCF7C4130DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56F9AE42-4F65-4A67-A32E-DCF7C4130DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56F9AE42-4F65-4A67-A32E-DCF7C4130DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56F9AE42-4F65-4A67-A32E-DCF7C4130DFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10789E8C-8D62-42BC-ACEC-9A11633B95B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10789E8C-8D62-42BC-ACEC-9A11633B95B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10789E8C-8D62-42BC-ACEC-9A11633B95B8}.Release|Any CPU.ActiveCfg = Release|Any CPU

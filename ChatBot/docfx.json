@@ -6,7 +6,7 @@
           "files": [
             "**.csproj"
           ],
-          "src": "C:\\Users\\root\\Desktop\\workbench\\cs-college-app\\Core"
+          "src": "C:\\Users\\root\\Desktop\\workbench\\cs-college-app\\ChatBot"
         }
       ],
       "dest": "api",

@@ -22,5 +22,10 @@ namespace GuiClient
 		{
 			get => nameInput.Text;
 		}
-	}
+
+        private void cancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
+    }
 }

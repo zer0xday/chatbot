@@ -20,6 +20,7 @@ namespace GuiClient
     public partial class MainWindow : Window
     {
         private Core core;
+        private string mainWindowDefaultTitle = "ChatBot";
         private string usedPluginPath;
         private string chatBoxContent = "<meta charset=utf-8>";
         private bool isReady = false;
@@ -27,11 +28,9 @@ namespace GuiClient
         public MainWindow()
         {
             InitializeComponent();
+            GetUsedPlugin();
 
             core = new Core();
-
-            usedPluginPath = GetUsedPlugin();
-
             statusBarText.Text = "Gotowy";
 
             ListenToMessages();
@@ -91,7 +90,7 @@ namespace GuiClient
             sendMessageFromField();
         }
 
-        private string GetUsedPlugin()
+        private void GetUsedPlugin()
         {
             var fileDialog = new FileDialog();
             fileDialog.ShowDialog();
@@ -99,10 +98,16 @@ namespace GuiClient
             if (fileDialog.DialogResult == false)
             {
                 App.Current.Shutdown();
-                return null;
+                return;
             }
 
-            return fileDialog.pluginName;
+            usedPluginPath = fileDialog.pluginName;
+
+            string[] pluginPathArray = usedPluginPath.Split("\\");
+            string pluginName = pluginPathArray[pluginPathArray.Length - 1];
+            pluginName = pluginName.Split('.')[0];
+
+            mainWindow.Title = $"{mainWindowDefaultTitle} ({pluginName})";
         }
 
         private void ChangeConnectionStatus(bool isConnected)
@@ -164,7 +169,7 @@ namespace GuiClient
                 } catch (Core.PluginNotReadyException) { }
             }
 
-            usedPluginPath = GetUsedPlugin();
+            GetUsedPlugin();
         }
     }
 }

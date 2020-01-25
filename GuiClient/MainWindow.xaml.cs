@@ -22,7 +22,7 @@ namespace GuiClient
         private Core core;
         private string mainWindowDefaultTitle = "ChatBot";
         private string usedPluginPath;
-        private string chatBoxContent = "<meta charset=utf-8>";
+        private string chatBoxContent = "<meta charset=utf-8><style>* { font-family: sans-serif; font-size: 11pt }</style>";
         private bool isReady = false;
 
         public MainWindow()

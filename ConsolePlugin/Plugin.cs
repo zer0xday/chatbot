@@ -22,9 +22,9 @@ namespace ConsolePlugin
         {
             if (GetConsoleWindow() == IntPtr.Zero)
             {
-                AllocConsole();
+                
             }
-
+AllocConsole();
             Console.WriteLine($"[=== Rozmowa z botem {botName} ===]");
             Console.WriteLine("Podaj swój pseudonim:");
 
@@ -39,6 +39,7 @@ namespace ConsolePlugin
 
         public void End()
         {
+            isReady = false;
             FreeConsole();
         }
 
@@ -69,9 +70,21 @@ namespace ConsolePlugin
 
         async private void getAsyncInput()
         {
+            bool repeat = true;
+
             await Task.Run(() =>
             {
-                var message = Console.ReadLine();
+                var message = "";
+
+                try
+                {
+                    message = Console.ReadLine();
+                } 
+                catch (System.IO.IOException)
+                {
+                    repeat = false;
+                    return;
+                }
 
                 if (message.Length > 0)
                 {
@@ -82,7 +95,10 @@ namespace ConsolePlugin
                 }
             });
 
-            getAsyncInput();
+            if (repeat)
+            {
+                getAsyncInput();
+            }
         }
 
         [DllImport("kernel32.dll")]

@@ -1,0 +1,22 @@
+{
+  "questions": [
+    {
+      "table": [
+        "czesc",
+        "cześć",
+        "siemka",
+        "siema",
+        "elo",
+        "hej",
+        "witam"
+      ],
+      "methodName": "WelcomeAnswer"
+    },
+    {
+      "table": [
+        "pogoda"
+      ],
+      "methodName": "WeatherAnswer"
+    }
+  ]
+}

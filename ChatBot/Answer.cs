@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Reflection;
+using System.IO;
 using RestSharp;
 using Newtonsoft.Json;
 
@@ -11,40 +12,100 @@ namespace ChatBot
 {
     partial class Core
     {
+        private class Questions
+        {
+            public List<QuestionRecords> questions { get; set; }
+        }
+
+        private class QuestionRecords
+        {
+            public List<string> table { get; set; }
+            public string methodName { get; set; }
+        }
+
         private class Answer
         {
-            private Dictionary<List<string>, string> questions = new Dictionary<List<string>, string>()
+            private const string DICTIONARIES_DIRECTORY_NAME = @"dictionaries\";
+            private const string DICTIONARY_JSON_FILE = "dictionary.json";
+
+            private Questions dictionary { get; set; }
+
+            public Answer()
             {
-                { 
-                    new List<string>() 
-                    { 
-                        "czesc", "cześć", "siemka", "siema", "elo", "hej", "witam" 
-                    }, 
-                    "WelcomeAnswer" 
-                },
-                { 
-                    new List<string>() 
-                    { 
-                        "pogoda"
-                    }, 
-                    "WeatherAnswer"
+                dictionary = GetDictionary();
+            }
+
+            private Questions GetDictionary()
+            {
+                Questions dictionary;
+
+                try
+                {
+                    StreamReader streamReader = new StreamReader(GetDictionaryLocation());
+                    string fileContent = streamReader.ReadToEnd();
+                    dictionary = JsonConvert.DeserializeObject<Questions>(fileContent);
+                } catch (Exception e)
+                {
+                    throw new Exception(e.Message);
                 }
-            };
+
+                return dictionary;
+            }
+                
+            private string GetDictionaryLocation()
+            {
+                string baseDir = AppContext.BaseDirectory;
+                string[] explodedPath = baseDir.Split("GuiClient");
+
+                StringBuilder dictionariesPath = new StringBuilder();
+                dictionariesPath.Append(explodedPath[0]);
+                dictionariesPath.Append(DICTIONARIES_DIRECTORY_NAME);
+                dictionariesPath.Append(DICTIONARY_JSON_FILE);
+
+                return dictionariesPath.ToString();
+            }
+
+            public string GetAnswer(string questionMessage, string username)
+            {
+                string methodName = GetMethodToInvoke(questionMessage);
+                string[] parameters = new string[2]
+                {
+                    questionMessage,
+                    username
+                };
+                string answer = "";
+
+                if (methodName.Length > 0)
+                {
+                    Type type = GetType();
+                    MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    if (method == null)
+                    {
+                        throw new Exception("Metoda dla wybranego zbioru pytań nie istnieje.");
+                    }
+
+                    var answerObject = method.Invoke(this, parameters);
+
+                    return answerObject.ToString();
+                }
+                return answer;
+            }
 
             private string GetMethodToInvoke(string questionMessage)
             {
                 string method = "";
 
-                foreach (var list in questions)
+                foreach (var question in dictionary.questions)
                 {
-                    string pattern = GetRegexPattern(list.Key);
+                    string pattern = GetRegexPattern(question.table);
 
                     Regex regex = new Regex(pattern);
                     var match = regex.Match(questionMessage);
 
                     if (match.Captures.Count > 0)
                     {
-                        method = list.Value;
+                        method = question.methodName;
                         break;
                     }
                 }
@@ -88,36 +149,9 @@ namespace ChatBot
                 }
             }
 
-            public string GetAnswer(string questionMessage, string username)
-            {
-                string methodName = GetMethodToInvoke(questionMessage);
-                string[] parameters = new string[2] 
-                {
-                    questionMessage, 
-                    username 
-                };
-                string answer = "";
-
-                if (methodName.Length > 0)
-                {
-                    Type type = GetType();
-                    MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-
-                    if (method == null)
-                    {
-                        throw new ArgumentNullException();
-                    }
-
-                    var answerObject = method.Invoke(this, parameters);
-
-                    return answerObject.ToString();
-                }
-                return answer;
-            }
-
             private string WelcomeAnswer(string question, string username)
             {
-                List<string> list = questions.Keys.First();
+                List<string> list = dictionary.questions.First().table;
                 Random rnd = new Random();
                 int randomIndex = rnd.Next(list.Count);
 
